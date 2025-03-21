@@ -316,7 +316,7 @@ def run_owl(question: str, example_module: str, uploaded_file=None) -> Tuple[str
     Args:
         question: 用户问题
         example_module: 要导入的示例模块名（如 "run_terminal_zh" 或 "run_deep"）
-        uploaded_file: 上传的文件路径（可选）
+        uploaded_file: 上传的文件（可选）- 当使用type="binary"时，这是字节数据
 
     Returns:
         Tuple[...]: 回答、令牌计数、状态
@@ -334,17 +334,71 @@ def run_owl(question: str, example_module: str, uploaded_file=None) -> Tuple[str
         logging.info(f"处理问题: '{question}', 使用模块: {example_module}")
         
         # 处理上传的文件
-        if uploaded_file:
-            # 记录上传的文件信息
-            file_name = os.path.basename(uploaded_file)
-            file_path = uploaded_file
-            logging.info(f"处理上传的文件: {file_name}, 路径: {file_path}")
-            
-            # 将文件路径添加到问题中
-            if "文件路径:" not in question and "file path:" not in question.lower():
-                question = f"{question}\n文件路径: {file_path}"
-            
-            logging.info(f"更新后的问题: '{question}'")
+        if uploaded_file is not None:
+            try:
+                # 创建临时目录保存上传的文件
+                tmp_dir = tempfile.mkdtemp(prefix="owl_upload_")
+                logging.info(f"创建临时目录: {tmp_dir}")
+                
+                # 生成一个唯一的文件名
+                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                
+                # 简单地根据文件内容的前几个字节来猜测文件类型
+                file_ext = ".bin"  # 默认扩展名
+                
+                # 简单的文件类型检测，不依赖magic库
+                if len(uploaded_file) > 4:
+                    # PDF 文件通常以 %PDF 开头
+                    if uploaded_file[:4] == b'%PDF':
+                        file_ext = ".pdf"
+                    # ZIP 文件 (可能是DOCX, XLSX等)
+                    elif uploaded_file[:4] == b'PK\x03\x04':
+                        # 尝试根据文件名确定具体类型
+                        file_ext = ".zip"  # 默认为zip
+                    # 纯文本文件检测 (如果前100个字节都是可打印ASCII或常见Unicode)
+                    elif all(c < 128 and c >= 32 or c in (9, 10, 13) for c in uploaded_file[:100]):
+                        file_ext = ".txt"
+                
+                file_name = f"uploaded_file_{timestamp}{file_ext}"
+                
+                # 生成安全的文件路径
+                file_path = os.path.normpath(os.path.join(tmp_dir, file_name))
+                
+                logging.info(f"准备保存文件: {file_path}")
+                
+                # 保存文件内容
+                try:
+                    with open(file_path, "wb") as f:
+                        f.write(uploaded_file)
+                    
+                    # 检查文件是否成功写入
+                    if not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
+                        raise ValueError("文件保存失败或文件为空")
+                    
+                    logging.info(f"文件已成功保存: {file_path}, 大小: {os.path.getsize(file_path)} 字节")
+                    
+                    # 将文件路径添加到问题中（使用规范化的路径，避免系统差异）
+                    normalized_path = file_path.replace('\\', '/')
+                    if "文件路径:" not in question and "file path:" not in question.lower():
+                        question = f"{question}\n文件路径: {normalized_path}"
+                    
+                    logging.info(f"更新后的问题: '{question}'")
+                    
+                except Exception as e:
+                    logging.error(f"保存文件时出错: {str(e)}")
+                    return (
+                        f"保存文件时出错: {str(e)}",
+                        "0",
+                        f"❌ 错误: 文件保存失败 - {str(e)}",
+                    )
+                
+            except Exception as e:
+                logging.error(f"处理上传文件时出错: {str(e)}")
+                return (
+                    f"处理上传文件时出错: {str(e)}",
+                    "0",
+                    f"❌ 错误: 文件处理失败 - {str(e)}",
+                )
 
         # 检查模块是否在MODULE_DESCRIPTIONS中
         if example_module not in MODULE_DESCRIPTIONS:
@@ -1077,19 +1131,20 @@ def create_ui():
                     value="打开百度搜索，总结一下camel-ai的camel框架的github star、fork数目等，并把数字用plot包写成python文件保存到本地，并运行生成的python文件。",
                 )
 
-                # 添加文件上传组件
+                # 添加文件上传组件 - 使用更明确的配置
                 file_upload = gr.File(
                     label="上传文件（可选）",
                     file_types=["pdf", "docx", "txt", "csv", "xlsx", "json", "py", "ipynb"],
                     file_count="single",
-                    type="filepath",
+                    type="binary",  # 使用binary类型
                 )
                 
-                # 添加文件上传说明
+                # 添加文件上传说明 - 更新说明以包含Windows兼容性
                 gr.Markdown("""
                     <div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
-                      <strong>文件上传说明：</strong> 上传文件后，系统会自动将文件路径添加到您的问题中。
-                      您可以在问题中引用这个文件，例如："分析这个文件的内容"或"总结这个文档的要点"。
+                      <strong>文件上传说明：</strong> 上传文件后，系统会自动将文件保存到临时目录并添加文件路径到您的问题中。
+                      支持多种文件格式，包括PDF、Word文档、文本文件、CSV、Excel、Python代码等。
+                      <br><strong>注意：</strong> 文件会被保存在临时目录，系统重启后可能会被清除。
                     </div>
                 """)
 
