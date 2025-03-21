@@ -838,7 +838,6 @@ def create_ui():
             logging.error(f"清空日志文件时出错: {str(e)}")
             return ""
 
-    # 修改process_with_live_logs函数以支持文件上传
     def process_with_live_logs(question, module_name, uploaded_file=None):
         """处理问题并实时更新日志"""
         global CURRENT_PROCESS
@@ -1131,7 +1130,7 @@ def create_ui():
                     value="打开百度搜索，总结一下camel-ai的camel框架的github star、fork数目等，并把数字用plot包写成python文件保存到本地，并运行生成的python文件。",
                 )
 
-                # 添加文件上传组件 - 使用更明确的配置
+               
                 file_upload = gr.File(
                     label="上传文件（可选）",
                     file_types=["pdf", "docx", "txt", "csv", "xlsx", "json", "py", "ipynb"],
@@ -1139,7 +1138,7 @@ def create_ui():
                     type="binary",  # 使用binary类型
                 )
                 
-                # 添加文件上传说明 - 更新说明以包含Windows兼容性
+                # 文件上传说明 - 更新说明以包含Windows兼容性
                 gr.Markdown("""
                     <div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
                       <strong>文件上传说明：</strong> 上传文件后，系统会自动将文件保存到临时目录并添加文件路径到您的问题中。
@@ -1291,7 +1290,7 @@ def create_ui():
 
                     refresh_button.click(fn=update_env_table, outputs=[env_table])
 
-        # 修改run_button点击事件以包含文件上传
+     
         run_button.click(
             fn=process_with_live_logs,
             inputs=[question_input, module_dropdown, file_upload],
