@@ -19,7 +19,6 @@ from camel.toolkits import (
     AudioAnalysisToolkit,
     CodeExecutionToolkit,
     ExcelToolkit,
-    HumanToolkit,
     ImageAnalysisToolkit,
     SearchToolkit,
     VideoAnalysisToolkit,
@@ -136,7 +135,7 @@ def construct_society(question: str) -> RolePlaying:
 def main():
     r"""Main function to run the OWL system with an example question."""
     # Default research question
-    default_task = "你的每一步都要经过我的意见才进行下一步执行，用plot画一个爱心图，并保存到本地."
+    default_task = "用plot画一个爱心图,并保存到本地,采取每一步之前用HumanToolkit询问我的意见。"
 
     # Override default task if command line argument is provided
     task = sys.argv[1] if len(sys.argv) > 1 else default_task
