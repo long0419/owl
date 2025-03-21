@@ -19,11 +19,14 @@ from camel.toolkits import (
     AudioAnalysisToolkit,
     CodeExecutionToolkit,
     ExcelToolkit,
+    HumanToolkit,
     ImageAnalysisToolkit,
     SearchToolkit,
     VideoAnalysisToolkit,
     BrowserToolkit,
     FileWriteToolkit,
+    HumanToolkit,
+    TerminalToolkit,
 )
 from camel.types import ModelPlatformType, ModelType
 from camel.logger import set_log_level
@@ -89,6 +92,8 @@ def construct_society(question: str) -> RolePlaying:
 
     # Configure toolkits
     tools = [
+        *HumanToolkit().get_tools(),
+        *TerminalToolkit().get_tools(),
         *BrowserToolkit(
             headless=False,  # Set to True for headless mode (e.g., on remote servers)
             web_agent_model=models["browsing"],
@@ -131,7 +136,7 @@ def construct_society(question: str) -> RolePlaying:
 def main():
     r"""Main function to run the OWL system with an example question."""
     # Default research question
-    default_task = "Navigate to Amazon.com and identify one product that is attractive to coders. Please provide me with the product name and price. No need to verify your answer."
+    default_task = "你的每一步都要经过我的意见才进行下一步执行，用plot画一个爱心图，并保存到本地."
 
     # Override default task if command line argument is provided
     task = sys.argv[1] if len(sys.argv) > 1 else default_task

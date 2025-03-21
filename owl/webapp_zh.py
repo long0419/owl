@@ -25,6 +25,7 @@ from dotenv import load_dotenv, set_key, find_dotenv, unset_key
 import threading
 import queue
 import re  # For regular expression operations
+import tempfile  # 添加此行，用于处理临时文件
 
 os.environ["PYTHONIOENCODING"] = "utf-8"
 
@@ -309,12 +310,13 @@ def validate_input(question: str) -> bool:
     return True
 
 
-def run_owl(question: str, example_module: str) -> Tuple[str, str, str]:
+def run_owl(question: str, example_module: str, uploaded_file=None) -> Tuple[str, str, str]:
     """运行OWL系统并返回结果
 
     Args:
         question: 用户问题
         example_module: 要导入的示例模块名（如 "run_terminal_zh" 或 "run_deep"）
+        uploaded_file: 上传的文件路径（可选）
 
     Returns:
         Tuple[...]: 回答、令牌计数、状态
@@ -330,6 +332,19 @@ def run_owl(question: str, example_module: str) -> Tuple[str, str, str]:
         # 确保环境变量已加载
         load_dotenv(find_dotenv(), override=True)
         logging.info(f"处理问题: '{question}', 使用模块: {example_module}")
+        
+        # 处理上传的文件
+        if uploaded_file:
+            # 记录上传的文件信息
+            file_name = os.path.basename(uploaded_file)
+            file_path = uploaded_file
+            logging.info(f"处理上传的文件: {file_name}, 路径: {file_path}")
+            
+            # 将文件路径添加到问题中
+            if "文件路径:" not in question and "file path:" not in question.lower():
+                question = f"{question}\n文件路径: {file_path}"
+            
+            logging.info(f"更新后的问题: '{question}'")
 
         # 检查模块是否在MODULE_DESCRIPTIONS中
         if example_module not in MODULE_DESCRIPTIONS:
@@ -769,8 +784,8 @@ def create_ui():
             logging.error(f"清空日志文件时出错: {str(e)}")
             return ""
 
-    # 创建一个实时日志更新函数
-    def process_with_live_logs(question, module_name):
+    # 修改process_with_live_logs函数以支持文件上传
+    def process_with_live_logs(question, module_name, uploaded_file=None):
         """处理问题并实时更新日志"""
         global CURRENT_PROCESS
 
@@ -782,7 +797,7 @@ def create_ui():
 
         def process_in_background():
             try:
-                result = run_owl(question, module_name)
+                result = run_owl(question, module_name, uploaded_file)
                 result_queue.put(result)
             except Exception as e:
                 result_queue.put((f"发生错误: {str(e)}", "0", f"❌ 错误: {str(e)}"))
@@ -1062,6 +1077,22 @@ def create_ui():
                     value="打开百度搜索，总结一下camel-ai的camel框架的github star、fork数目等，并把数字用plot包写成python文件保存到本地，并运行生成的python文件。",
                 )
 
+                # 添加文件上传组件
+                file_upload = gr.File(
+                    label="上传文件（可选）",
+                    file_types=["pdf", "docx", "txt", "csv", "xlsx", "json", "py", "ipynb"],
+                    file_count="single",
+                    type="filepath",
+                )
+                
+                # 添加文件上传说明
+                gr.Markdown("""
+                    <div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+                      <strong>文件上传说明：</strong> 上传文件后，系统会自动将文件路径添加到您的问题中。
+                      您可以在问题中引用这个文件，例如："分析这个文件的内容"或"总结这个文档的要点"。
+                    </div>
+                """)
+
                 # 增强版模块选择下拉菜单
                 # 只包含MODULE_DESCRIPTIONS中定义的模块
                 module_dropdown = gr.Dropdown(
@@ -1205,10 +1236,10 @@ def create_ui():
 
                     refresh_button.click(fn=update_env_table, outputs=[env_table])
 
-        # 设置事件处理
+        # 修改run_button点击事件以包含文件上传
         run_button.click(
             fn=process_with_live_logs,
-            inputs=[question_input, module_dropdown],
+            inputs=[question_input, module_dropdown, file_upload],
             outputs=[token_count_output, status_output, log_display2],
         )
 
