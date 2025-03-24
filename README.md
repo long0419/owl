@@ -193,6 +193,10 @@ python owl/run_deepseek.py
 
 # Run with other OpenAI-compatible models
 python owl/run_openai_compatiable_model.py
+
+# Run with VLLM backends (using Qwen2.5-VL-7B-Instruct w/ 4 GPUs as an example)
+bash owl/scripts/serve.sh  # run this under another terminal or screen
+python owl/run_vllm/py
 ```
 
 For a simpler version that only requires an LLM API key, you can try our minimal example:
@@ -239,7 +243,7 @@ We provided a script to reproduce the results on GAIA.
 You can check the `run_gaia_roleplaying.py` file and run the following command:
 
 ```bash
-python run_gaia_roleplaying.py
+python owl/run_gaia_roleplaying.py
 ```
 
 # ⏱️ Future Plans

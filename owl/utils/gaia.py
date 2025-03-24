@@ -252,6 +252,7 @@ class GAIABenchmark(BaseBenchmark):
                 
     
             if save_result:
+                os.makedirs(os.path.dirname(self.save_to), exist_ok=True)
                 with open(self.save_to, 'w') as f:
                     json.dump(self._results, f, indent=4, ensure_ascii=False)
                 f.close()
@@ -370,6 +371,10 @@ class GAIABenchmark(BaseBenchmark):
 
 
     def normalize_number_str(self, number_str: str) -> float:
+        if number_str is None:
+            logger.error("Received None as number string, returning infinity.")
+            return float("inf")
+    
         for char in ["$", "%", ","]:
             number_str = number_str.replace(char, "")
         try:

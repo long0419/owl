@@ -40,6 +40,7 @@ owl/data
 owl/tmp
 owl/.env
 owl/utils/__pycache__/
+owl/results
 
 # Logs
 *.log
