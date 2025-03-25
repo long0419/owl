@@ -31,7 +31,7 @@ from utils import GAIABenchmark
 # Configuration
 LEVEL = 1
 SAVE_RESULT = True
-test_idx = [0]
+test_idx = list(range(50))
 VLLM_MODEL_TYPE = "Qwen/Qwen2.5-VL-7B-Instruct"  # set the VLLM model type
 PORT = 8964  # set the port for the VLLM model
 SAVE_TO = "results/result_vllm.json"

@@ -393,8 +393,8 @@ class GAIABenchmark(BaseBenchmark):
 
         Args:
             s (str): The string to split.
-            char_list (Optional[List[str]], optional): T
-                he list of characters to split on.
+            char_list (Optional[List[str]], optional): The list of characters 
+                to split on.
                 (default: :obj:`None`)
         """
         if char_list is None:
