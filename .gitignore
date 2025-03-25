@@ -47,6 +47,12 @@ owl/results
 logs/
 log/
 
+# Local files
+**/local_*
+**/local-*
+**/*_local*
+**/*-local*
+
 # Coverage reports
 htmlcov/
 .tox/

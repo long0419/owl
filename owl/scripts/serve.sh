@@ -5,6 +5,7 @@
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1 
 
 model=${1:-Qwen/Qwen2.5-VL-7B-Instruct}
+# model=${1:-Qwen/Qwen2.5-7B-Instruct}
 max_model_len=${2:-32768} 
 gpu_memory_utilization=${3:-0.9}
 devices=${4:-"0,1,2,3"}
