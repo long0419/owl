@@ -108,14 +108,34 @@ async def construct_society(
     """
     models = {
         "user": ModelFactory.create(
-            model_platform=ModelPlatformType.OPENAI,
-            model_type=ModelType.GPT_4O,
-            model_config_dict={"temperature": 0},
+            model_platform=ModelPlatformType.OLLAMA,
+            model_type="qwq:latest",
+            url="http://localhost:11434/v1",
+            model_config_dict={"temperature": 0.8, "max_tokens": 1000000},
         ),
         "assistant": ModelFactory.create(
-            model_platform=ModelPlatformType.OPENAI,
-            model_type=ModelType.GPT_4O,
-            model_config_dict={"temperature": 0},
+            model_platform=ModelPlatformType.OLLAMA,
+            model_type="qwq:latest",
+            url="http://localhost:11434/v1",
+            model_config_dict={"temperature": 0.2, "max_tokens": 1000000},
+        ),
+        "browsing": ModelFactory.create(
+            model_platform=ModelPlatformType.OLLAMA,
+            model_type="llava:latest",
+            url="http://localhost:11434/v1",
+            model_config_dict={"temperature": 0.4, "max_tokens": 1000000},
+        ),
+        "planning": ModelFactory.create(
+            model_platform=ModelPlatformType.OLLAMA,
+            model_type="qwq:latest",
+            url="http://localhost:11434/v1",
+            model_config_dict={"temperature": 0.4, "max_tokens": 1000000},
+        ),
+        "image": ModelFactory.create(
+            model_platform=ModelPlatformType.OLLAMA,
+            model_type="llava:latest",
+            url="http://localhost:11434/v1",
+            model_config_dict={"temperature": 0.4, "max_tokens": 1000000},
         ),
     }
 
@@ -149,9 +169,8 @@ async def main():
 
         # Default task
         default_task = (
-            "I'd like a academic report about Andrew Ng, including "
-            "his research direction, published papers (At least 3),"
-            " institutions, etc. "
+            "帮我搜索下百度，然后查找onchain plm 官网"
+            "并打开这个官网. "
         )
 
         # Override default task if command line argument is provided

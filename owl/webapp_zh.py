@@ -243,6 +243,7 @@ def get_latest_logs(max_lines=100, queue_source=None):
 # Dictionary containing module descriptions
 MODULE_DESCRIPTIONS = {
     "run": "默认模式：使用OpenAI模型的默认的智能体协作模式，适合大多数任务。",
+    "run_mcp": "使用mcp方式运行处理任务",
     "run_mini": "使用使用OpenAI模型最小化配置处理任务",
     "run_gemini": "使用 Gemini模型处理任务",
     "run_deepseek_zh": "使用deepseek模型处理中文任务",
@@ -1265,10 +1266,11 @@ def main():
         app = create_ui()
 
         app.queue()
-        app.launch(share=False)
+        app.launch(share=True)
     except Exception as e:
         logging.error(f"启动应用程序时发生错误: {str(e)}")
         print(f"启动应用程序时发生错误: {str(e)}")
+
         import traceback
 
         traceback.print_exc()
