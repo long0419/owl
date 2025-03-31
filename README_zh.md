@@ -126,10 +126,12 @@
   </p>
 </div>
 
-- **[2025.03.26]**: 支持Gemini 2.5 Pro模型，添加示例运行代码
-- **[2025.03.21]**: 集成OpenRouter模型平台，修复Gemini工具调用的bug
-- **[2025.03.20]**: 在MCP工具包中添加Accept头部，支持自动安装playwright
-- **[2025.03.16]**: 支持必应搜索、百度搜索
+- **[2025.03.27]**: 集成SearxNGToolkit，使用SearxNG搜索引擎执行网络搜索。
+- **[2025.03.26]**: 增强Browser Toolkit，支持"chrome"、"msedge"和"chromium"多种浏览器通道。
+- **[2025.03.25]**: 支持Gemini 2.5 Pro模型，添加示例运行代码。
+- **[2025.03.21]**: 集成OpenRouter模型平台，修复Gemini工具调用的bug。
+- **[2025.03.20]**: 在MCP工具包中添加Accept header，支持自动安装playwright。
+- **[2025.03.16]**: 支持必应搜索、百度搜索。
 - **[2025.03.12]**: 在SearchToolkit中添加了Bocha搜索功能，集成了火山引擎模型平台，并更新了Azure和OpenAI Compatible模型的结构化输出和工具调用能力。
 - **[2025.03.11]**: 我们添加了 MCPToolkit、FileWriteToolkit 和 TerminalToolkit，增强了 OWL Agent 的 MCP（模型上下文协议）集成、文件写入能力和终端命令执行功能。MCP 作为一个通用协议层，标准化了 AI 模型与各种数据源和工具的交互方式。
 - **[2025.03.09]**: 我们添加了基于网页的用户界面，使系统交互变得更加简便。
