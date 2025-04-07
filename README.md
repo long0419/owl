@@ -259,10 +259,10 @@ pip install -r requirements.txt --use-pep517
 ```bash
 # This option downloads a ready-to-use image from Docker Hub
 # Fastest and recommended for most users
-docker-compose up -d
+docker compose up -d
 
 # Run OWL inside the container
-docker-compose exec owl bash
+docker compose exec owl bash
 cd .. && source .venv/bin/activate
 playwright install-deps
 xvfb-python examples/run.py
@@ -276,10 +276,10 @@ xvfb-python examples/run.py
 # 2. Comment out the "image: mugglejinx/owl:latest" line
 # 3. Uncomment the "build:" section and its nested properties
 # 4. Then run:
-docker-compose up -d --build
+docker compose up -d --build
 
 # Run OWL inside the container
-docker-compose exec owl bash
+docker compose exec owl bash
 cd .. && source .venv/bin/activate
 playwright install-deps
 xvfb-python examples/run.py
@@ -560,6 +560,9 @@ python owl/webapp_zh.py
 
 # Start the English version
 python owl/webapp.py
+
+# Start the Japanese version
+python owl/webapp_jp.py
 ```
 
 ## Features
@@ -637,7 +640,7 @@ Join us ([*Discord*](https://discord.camel-ai.org/) or [*WeChat*](https://ghli.o
 
 Join us for further discussions!
 <!-- ![](./assets/community.png) -->
-![](./assets/community.jpg)
+![](./assets/community.jpeg)
 
 # ❓ FAQ
 

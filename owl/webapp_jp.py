@@ -1,14 +1,15 @@
 # ========= Copyright 2023-2024 @ CAMEL-AI.org. All Rights Reserved. =========
-# Apache License 2.0（「ライセンス」）に基づいてライセンスされています。
-# あなたはライセンスに準拠している場合を除き、このファイルを使用できません。
-# ライセンスのコピーは以下から入手できます。
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 #
-# 適用される法律で要求されているか、書面で合意されていない限り、
-# ライセンスに基づいて配布されるソフトウェアは「現状のまま」で、
-# 明示的または黙示的ないかなる種類の保証や条件もなく配布されます。
-# ライセンスに基づく特定の言語での権限と制限については、ライセンスを参照してください。
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 # ========= Copyright 2023-2024 @ CAMEL-AI.org. All Rights Reserved. =========
 # 正しいモジュールパスからインポート
 from utils import run_society
@@ -333,13 +334,13 @@ def run_owl(question: str, example_module: str) -> Tuple[str, str, str]:
     try:
         # Ensure environment variables are loaded
         load_dotenv(find_dotenv(), override=True)
-        logging.info(
-            f"質問を処理中: '{question}', モジュール使用: {example_module}"
-        )
+        logging.info(f"質問を処理中: '{question}', モジュール使用: {example_module}")
 
         # Check if the module is in MODULE_DESCRIPTIONS
         if example_module not in MODULE_DESCRIPTIONS:
-            logging.error(f"ユーザーがサポートされていないモジュールを選択しました: {example_module}")
+            logging.error(
+                f"ユーザーがサポートされていないモジュールを選択しました: {example_module}"
+            )
             return (
                 f"選択されたモジュール '{example_module}' はサポートされていません",
                 "0",
@@ -385,7 +386,9 @@ def run_owl(question: str, example_module: str) -> Tuple[str, str, str]:
             society = module.construct_society(question)
 
         except Exception as e:
-            logging.error(f"社会シミュレーションの構築中にエラーが発生しました: {str(e)}")
+            logging.error(
+                f"社会シミュレーションの構築中にエラーが発生しました: {str(e)}"
+            )
             return (
                 f"社会シミュレーションの構築中にエラーが発生しました: {str(e)}",
                 "0",
@@ -398,7 +401,9 @@ def run_owl(question: str, example_module: str) -> Tuple[str, str, str]:
             answer, chat_history, token_info = run_society(society)
             logging.info("社会シミュレーションが完了しました")
         except Exception as e:
-            logging.error(f"社会シミュレーションの実行中にエラーが発生しました: {str(e)}")
+            logging.error(
+                f"社会シミュレーションの実行中にエラーが発生しました: {str(e)}"
+            )
             return (
                 f"社会シミュレーションの実行中にエラーが発生しました: {str(e)}",
                 "0",
@@ -424,9 +429,7 @@ def run_owl(question: str, example_module: str) -> Tuple[str, str, str]:
         )
 
     except Exception as e:
-        logging.error(
-            f"質問の処理中に予期しないエラーが発生しました: {str(e)}"
-        )
+        logging.error(f"質問の処理中に予期しないエラーが発生しました: {str(e)}")
         return (f"エラーが発生しました: {str(e)}", "0", f"❌ エラー: {str(e)}")
 
 
@@ -668,9 +671,7 @@ def save_env_table_changes(data):
         str: 操作ステータス情報、HTML形式のステータスメッセージを含む
     """
     try:
-        logging.info(
-            f"環境変数テーブルデータの処理を開始します、タイプ: {type(data)}"
-        )
+        logging.info(f"環境変数テーブルデータの処理を開始します、タイプ: {type(data)}")
 
         # Get all current environment variables
         current_env_vars = load_env_vars()
@@ -696,9 +697,7 @@ def save_env_table_changes(data):
                     if (
                         key and str(key).strip()
                     ):  # If key name is not empty, add or update
-                        logging.info(
-                            f"環境変数の処理: {key} = {value}"
-                        )
+                        logging.info(f"環境変数の処理: {key} = {value}")
                         add_env_var(key, str(value))
                         processed_keys.add(key)
         # Process other formats
@@ -751,7 +750,9 @@ def save_env_table_changes(data):
         import traceback
 
         error_details = traceback.format_exc()
-        logging.error(f"環境変数の保存中にエラーが発生しました: {str(e)}\n{error_details}")
+        logging.error(
+            f"環境変数の保存中にエラーが発生しました: {str(e)}\n{error_details}"
+        )
         return f"❌ 保存に失敗しました: {str(e)}"
 
 

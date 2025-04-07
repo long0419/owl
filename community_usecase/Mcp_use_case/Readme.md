@@ -1,21 +1,22 @@
-# Content Curation with OWL & MCP
-
-This project leverages **OWL (Optimized Workforce Learning)** and **MCP (Multi-Agent Content Processing)** to automate content curation. The system scrapes top tech news websites, extracts relevant information, and compiles a summary report.
+# Autonomous Website Scraping with OWL + FireCrawl MCP
+ 
+This project leverages OWL (Optimized Workforce Learning) and FireCrawl MCP (Model Context Protocol) to automate content curation. The system scrapes top tech news websites, extracts relevant information, and compiles a summary report.
 
 ## Features
 
-- Uses **MCPToolkit** for managing toolkits and performing web scraping.
+- Uses **FireCrawl MCP Server** for performing web scraping.
 - Implements **OwlRolePlaying** for enhanced multi-agent task execution.
-- Scrapes **TechCrunch, The Verge, and Wired**.
+- Scrapes **TechCrunch, The Verge, and Wired** using **FireCrawl**.
 - Extracts and summarizes **headlines, article summaries, and publication dates**.
 - Generates a digest report **(Latest_tech_digest.md)** based on trends from these sources.
+- Runs a default scraping task which can be updated before running the Script.
 
 ## Installation
 
 1. Clone this repository:
    ```sh
-   git clone https://github.com/your-repo.git
-   cd your-repo
+   git clone https://github.com/camel-ai/owl.git
+   cd owl
    ```
 2. Install dependencies:
    ```sh
@@ -26,34 +27,45 @@ This project leverages **OWL (Optimized Workforce Learning)** and **MCP (Multi-A
 
 ## Usage
 
+Navigate to the community use case directory before running the script:
+
+```sh
+cd community_usecase/Mcp_use_Case
+```
+
 Run the script using:
 
 ```sh
-python script.py "Your Custom Task Here"
+python Content_curator.py 
 ```
-
-Or use the default task defined in the script.
+The script automatically executes the default task without taking additional input from the terminal.
 
 ## Configuration
 
-- The script reads from `mcp_servers_config.json` to configure MCP.
-- Modify the `default_task` section to adjust scraping and summarization behavior.
+- The script reads from `mcp_servers_config.json`, which is located in the same folder as Mcp_use_case.
+- Modify the `default_task` section in `Content_curator.py` to adjust scraping and summarization behavior.
+
+## Improvements & Customization
+
+- The current implementation runs a **default task** and does not take task input from the terminal.
+- To modify the scraping target or change the extracted details, update the `default_task` in `Content_curator.py`.
+- The project is stored in the `Mcp_use_Case` folder inside `community_usecase` in the OWL directory.
 
 ## Error Handling
 
-- The script ensures **graceful cleanup** in case of failures.
+- Ensures **graceful cleanup** in case of failures.
 - Implements **try-except** blocks to handle tool execution errors.
+- Cancels running async tasks to **prevent memory leaks**.
+- Supports **KeyboardInterrupt** for a safe shutdown.
 
 ## Cleanup & Shutdown
 
 - The script **automatically disconnects MCP** after execution.
-- Cancels running async tasks to **prevent memory leaks**.
-- Handles **KeyboardInterrupt** for a graceful shutdown.
+- Cancels remaining async tasks to **prevent memory leaks**.
+- Special handling for **Windows platforms** is included to ensure smooth termination.
 
-## Future Improvements
+## Repository
 
-- Add support for more tech news sources.
-- Implement NLP-based **sentiment analysis** on extracted news.
-- Enable storing summaries in structured formats like JSON/CSV.
+For more details, visit the OWL repository: [OWL GitHub Repo](https://github.com/camel-ai/owl)
 
 
